@@ -4,5 +4,30 @@
 
 {% block body %}
 
-hi 
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">S.N</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">amount</th>
+        <th scope="col">entry type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        {% for i in data %}
+        <th scope="row">1</th>
+        <td>{{i.name}}</td>
+        <td>{{i.description}}</td>
+        <td>{{i.amount}}</td>
+        <td>{{i.entry}}</td>
+        <td>{{i.name}}</td>
+        
+        {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+
+
 {% endblock %}

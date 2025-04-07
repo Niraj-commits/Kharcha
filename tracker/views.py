@@ -1,7 +1,12 @@
 from django.shortcuts import render
+from django.contrib import messages
+from .models import *
 
 # Create your views here.
 
 def home(request):
     
-    return render(request,'home.html')
+    datas = info.objects.all()
+    context = {"data":datas}
+    
+    return render(request,'home.html',context)
