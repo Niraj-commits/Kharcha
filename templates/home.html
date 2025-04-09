@@ -8,13 +8,13 @@
 <div class="card" style="width: 18rem;">
   <div class="list-group">
     <a href="{% url 'add_card' %}" class="list-group-item list-group-item-action active">
-      The current link item
+      Add Cards
     </a>
   </div>
   {% for card in cards %}
   <div class="card-body">
     <h5 class="card-title" >{{card.name}}</h5>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
+    <a href="{% url 'view_details' card.id %}" class="btn btn-primary">View Card</a>
   </div>
   {% endfor %}
 </div>

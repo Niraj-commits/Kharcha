@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}View Card Details{% endblock title %}
+
+{% block body %}
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">S.N</th>
+        <th scope="col">Name</th>
+        <th scope="col">Description</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Entry Type</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for expense in expense_entries %}
+      <tr>
+        <th scope="row">1</th>
+        <td>{{expense.title}}</td>
+        <td>{{expense.description}}</td>
+        {% if expense.entry_type == "expense" %}
+        <td class="text-danger bold">{{expense.amount}}</td>
+        {% elif expense.entry_type == "income" %}
+        <td class="text-success">{{expense.amount}}</td>
+        {% endif %}
+        <td>{{expense.entry_type}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock body %}

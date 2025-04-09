@@ -20,4 +20,13 @@ def add_card(request):
         return redirect('/')
     
     return render(request,'add_card.html')
-        
+
+
+def view_card_details(request,pk):
+    
+    card_details = card.objects.get(pk = pk)
+    info = card_details.cards.all()
+    context = {"expense_entries":info}
+    
+    return render(request,"card_details/view.html",context)
+    
