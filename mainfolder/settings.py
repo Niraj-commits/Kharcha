@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     # Custom Apps
     'tracker',
     'core',
-    'django.contrib.messages',
 ]
 
 MIDDLEWARE = [

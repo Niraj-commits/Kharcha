@@ -4,30 +4,19 @@
 
 {% block body %}
 
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">S.N</th>
-        <th scope="col">Name</th>
-        <th scope="col">Description</th>
-        <th scope="col">amount</th>
-        <th scope="col">entry type</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        {% for i in data %}
-        <th scope="row">1</th>
-        <td>{{i.name}}</td>
-        <td>{{i.description}}</td>
-        <td>{{i.amount}}</td>
-        <td>{{i.entry}}</td>
-        <td>{{i.name}}</td>
-        
-        {% endfor %}
-      </tr>
-    </tbody>
-  </table>
 
+<div class="card" style="width: 18rem;">
+  <div class="list-group">
+    <a href="{% url 'add_card' %}" class="list-group-item list-group-item-action active">
+      The current link item
+    </a>
+  </div>
+  {% for card in cards %}
+  <div class="card-body">
+    <h5 class="card-title" >{{card.name}}</h5>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+  {% endfor %}
+</div>
 
 {% endblock %}
