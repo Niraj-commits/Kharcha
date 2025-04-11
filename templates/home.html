@@ -1,22 +1,62 @@
 {% extends "base.html" %}
 
-{% block title %}Title{% endblock %}
+{% block title %}Your Cards{% endblock %}
 
 {% block body %}
+<div class="container my-5">
+  <h2 class="mb-4">Your Cards</h2>
 
+  <div class="row g-4">
+    <!-- Existing Cards -->
+    {% for card in cards %}
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ card.name }}</h5>
+          <a href="{% url 'view_details' card.id %}" class="btn btn-primary mt-3">View Card</a>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
 
-<div class="card" style="width: 18rem;">
-  <div class="list-group">
-    <a href="{% url 'add_card' %}" class="list-group-item list-group-item-action active">
-      Add Cards
-    </a>
+    <!-- Add Card at Bottom Left (Opens Modal) -->
+    <div class="col-md-4">
+      <div class="card h-100 text-center border-primary">
+        <div class="card-body d-flex flex-column justify-content-center align-items-center">
+          <h5 class="card-title">Add a New Card</h5>
+          <button class="btn btn-outline-primary mt-3 w-75" data-bs-toggle="modal" data-bs-target="#addCardModal">
+            + Add Card
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-  {% for card in cards %}
-  <div class="card-body">
-    <h5 class="card-title" >{{card.name}}</h5>
-    <a href="{% url 'view_details' card.id %}" class="btn btn-primary">View Card</a>
-  </div>
-  {% endfor %}
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="addCardModal" tabindex="-1" aria-labelledby="addCardModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <form method="POST" action="{% url 'add_card' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="addCardModalLabel">Add New Card</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="cardName" class="form-label">Card Name</label>
+            <input type="text" name="name" class="form-control" id="cardName" required>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}

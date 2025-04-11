@@ -26,7 +26,7 @@ def view_card_details(request,pk):
     
     card_details = card.objects.get(pk = pk)
     info = card_details.cards.all()
-    context = {"expense_entries":info}
+    context = {"expense_entries":info,"card_details":card_details}
     
     return render(request,"card_details/view.html",context)
     
