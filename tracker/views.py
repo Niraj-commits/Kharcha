@@ -1,13 +1,16 @@
 from django.shortcuts import render,HttpResponse,redirect
 from django.contrib import messages
 from .models import *
+from .filter import *
 
 # Create your views here.
 
 def home(request):
     
     cards = card.objects.all()
-    context = {"cards":cards}
+    item_filter = CardFilter(request.GET,queryset=cards)
+    cards = item_filter.qs
+    context = {"cards":cards,"filter":item_filter}
     
     return render(request,'home.html',context)
 
@@ -25,8 +28,21 @@ def add_card(request):
 def view_card_details(request,pk):
     
     card_details = card.objects.get(pk = pk)
-    info = card_details.cards.all()
-    context = {"expense_entries":info,"card_details":card_details}
+    detail = info.objects.filter(card = card_details)
+    item_filter = InfoFilter(request.GET,queryset=detail)
+    detail = item_filter.qs
+    
+    total_amount = 0
+    for item in detail:
+        
+        if item.entry_type == "income":
+            total_amount += item.amount
+        
+        elif item.entry_type == "expense":
+            total_amount -= item.amount
+    context = {"expense_entries":detail,"card_details":card_details,"filter":item_filter,"total_amount":total_amount}
+    
+
     
     return render(request,"card_details/view.html",context)
     

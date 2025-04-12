@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # Custom Apps
     'tracker',
     'core',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
