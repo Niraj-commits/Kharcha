@@ -42,7 +42,35 @@ def view_card_details(request,pk):
             total_amount -= item.amount
     context = {"expense_entries":detail,"card_details":card_details,"filter":item_filter,"total_amount":total_amount}
     
-
-    
     return render(request,"card_details/view.html",context)
+
+def Add_Expense(request,pk):
+    card_details = card.objects.get(pk = pk)
+    if request.method == "POST":
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        amount = request.POST.get('amount')
+        entry_type = "expense"
+        linked_card = card_details
+        
+        info.objects.create(title = title,description = description,amount=amount,entry_type=entry_type,card = linked_card)
+        return redirect('view_details',pk=pk)
     
+    context= {"card_details": card_details}
+    return render(request,'card_details/add_expense.html',context)
+
+
+def Add_Income(request,pk):
+    card_details = card.objects.get(pk = pk)
+    if request.method == "POST":
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        amount = request.POST.get('amount')
+        entry_type = "income"
+        linked_card = card_details
+        
+        info.objects.create(title = title,description = description,amount=amount,entry_type=entry_type,card = linked_card)
+        return redirect('view_details',pk=pk)
+    
+    context= {"card_details": card_details}
+    return render(request,'card_details/add_income.html',context)

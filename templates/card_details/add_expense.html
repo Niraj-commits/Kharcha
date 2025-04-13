@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Add Expense{% endblock title %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="card shadow">
+    <div class="card-header bg-danger text-white">
+      <h4 class="mb-0">Add Expense</h4>
+    </div>
+    <div class="card-body">
+      <form action="{% url 'add_expense' card_details.id %}" method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label for="title" class="form-label">Title</label>
+          <input type="text" name="title" id="title" class="form-control" placeholder="e.g. Groceries">
+        </div>
+
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <input type="text" name="description" id="description" class="form-control" placeholder="Optional details">
+        </div>
+
+        <div class="mb-3">
+          <label for="amount" class="form-label">Amount</label>
+          <input type="number" name="amount" id="amount" class="form-control" placeholder="e.g. 200">
+        </div>
+
+        <div class="text-end">
+          <button type="submit" class="btn btn-danger">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock body %}
