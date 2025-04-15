@@ -32,6 +32,9 @@ def view_card_details(request,pk):
     item_filter = InfoFilter(request.GET,queryset=detail)
     detail = item_filter.qs
     
+    
+
+    
     total_amount = 0
     for item in detail:
         
@@ -42,6 +45,9 @@ def view_card_details(request,pk):
             total_amount -= item.amount
     context = {"expense_entries":detail,"card_details":card_details,"filter":item_filter,"total_amount":total_amount}
     
+    
+
+
     return render(request,"card_details/view.html",context)
 
 def Add_Expense(request,pk):
