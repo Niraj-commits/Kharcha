@@ -56,7 +56,7 @@ def Add_Expense(request,pk):
         return redirect('view_details',pk=pk)
     
     context= {"card_details": card_details}
-    return render(request,'card_details/add_expense.html',context)
+    return render(request,'card_details/view.html',context)
 
 
 def Add_Income(request,pk):
@@ -72,7 +72,7 @@ def Add_Income(request,pk):
         return redirect('view_details',pk=pk)
     
     context= {"card_details": card_details}
-    return render(request,'card_details/add_income.html',context)
+    return render(request,'card_details/view.html',context)
 
 def edit_card_details(request,pk,edit_id):
     
@@ -94,7 +94,7 @@ def edit_card_details(request,pk,edit_id):
         item_detail.save()
         return redirect('view_details',pk = pk)
     
-    return render(request,'card_details/edit.html',context)
+    return render(request,'card_details/view.html',context)
 
 def delete_card_details(request,pk,delete_id):
     

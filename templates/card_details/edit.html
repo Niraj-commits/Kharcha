@@ -1,47 +1,31 @@
-{% extends "base.html" %}
-
-{% block title %} Edit Entry {% endblock title %}
-
-{% block body %}
-<div class="container mt-5">
-    <h2 class="mb-4">Edit Entry</h2>
-    <form action="{% url 'edit_details' card_details.id task.id %}" method="post" class="needs-validation" novalidate>
-        {% csrf_token %}
-        
-        <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                id="title" 
-                name="title" 
-                value="{{ task.title }}" 
-                required>
-        </div>
-
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <input 
-                type="text" 
-                class="form-control" 
-                id="description" 
-                name="description" 
-                value="{{ task.description }}" 
-                required>
-        </div>
-
-        <div class="mb-3">
-            <label for="amount" class="form-label">Amount</label>
-            <input 
-                type="number" 
-                class="form-control" 
-                id="amount" 
-                name="amount" 
-                value="{{ task.amount }}" 
-                required>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-    </form>
-</div>
-{% endblock body %}
+<div class="modal fade" id="editModal{{ expense.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ expense.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form method="POST" action="{% url 'edit_details' card_details.id expense.id %}">
+          {% csrf_token %}
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel{{ expense.id }}">Edit Entry</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Title</label>
+              <input type="text" class="form-control" name="title" value="{{ expense.title }}">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Description</label>
+              <input type="text" class="form-control" name="description" value="{{ expense.description }}">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Amount</label>
+              <input type="number" class="form-control" name="amount" value="{{ expense.amount }}">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
