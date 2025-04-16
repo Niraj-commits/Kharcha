@@ -79,7 +79,7 @@ def edit_card_details(request,pk,edit_id):
     card_details = card.objects.get(pk = pk)
     item_detail = info.objects.get(id = edit_id)
     
-    context = {"items":item_detail,"card_details":card_details}
+    context = {"task":item_detail,"card_details":card_details}
     
     if request.method == "POST":
         title = request.POST.get('title')
@@ -101,7 +101,5 @@ def delete_card_details(request,pk,delete_id):
     # card_details = card.objects.get(pk = pk)
     item_detail = info.objects.get(id = delete_id)
     
-    item_detail.delete()
-    
-    # item_detail.save()
+    item_detail.delete()    
     return redirect('view_details',pk = pk)
