@@ -107,7 +107,7 @@
           <td class="text">{{ expense.entry_type }}</td>
           <td>{{ expense.created_at }}</td>
           <td>
-            <a href="#" class="btn btn-sm btn-primary">Edit</a>
+            <a href="{% url 'edit_details' card_details.id expense.id %}" class="btn btn-sm btn-primary">Edit</a>
             <a href="#" class="btn btn-sm btn-danger ms-1">Delete</a>
           </td>
 

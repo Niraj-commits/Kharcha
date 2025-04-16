@@ -31,10 +31,7 @@ def view_card_details(request,pk):
     detail = info.objects.filter(card = card_details)
     item_filter = InfoFilter(request.GET,queryset=detail)
     detail = item_filter.qs
-    
-    
-
-    
+        
     total_amount = 0
     for item in detail:
         
@@ -44,10 +41,6 @@ def view_card_details(request,pk):
         elif item.entry_type == "expense":
             total_amount -= item.amount
     context = {"expense_entries":detail,"card_details":card_details,"filter":item_filter,"total_amount":total_amount}
-    
-    
-
-
     return render(request,"card_details/view.html",context)
 
 def Add_Expense(request,pk):
@@ -80,3 +73,35 @@ def Add_Income(request,pk):
     
     context= {"card_details": card_details}
     return render(request,'card_details/add_income.html',context)
+
+def edit_card_details(request,pk,edit_id):
+    
+    card_details = card.objects.get(pk = pk)
+    item_detail = info.objects.get(id = edit_id)
+    
+    context = {"items":item_detail,"card_details":card_details}
+    
+    if request.method == "POST":
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        amount = request.POST.get('amount')
+        selected_card = card_details
+        
+        item_detail.title = title
+        item_detail.description = description
+        item_detail.amount = amount
+        item_detail.card = selected_card
+        item_detail.save()
+        return redirect('view_details',pk = pk)
+    
+    return render(request,'card_details/edit.html',context)
+
+def delete_card_details(request,pk,delete_id):
+    
+    # card_details = card.objects.get(pk = pk)
+    item_detail = info.objects.get(id = delete_id)
+    
+    item_detail.delete()
+    
+    # item_detail.save()
+    return redirect('view_details',pk = pk)
