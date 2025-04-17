@@ -7,7 +7,8 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Your Records</h2>
         <form class="d-flex align-items-center" method="get" action="{% url 'home' %}">
-            <div class="col-md-6 d-flex align-items-center me-2">  <label for="search" class="me-2 fw-semibold mb-0">Search:</label>
+            <div class="col-md-6 d-flex align-items-center me-2">
+                <label for="search" class="me-2 fw-semibold mb-0">Search:</label>
                 <input type="text" id="search" name="search" class="form-control flex-grow-1" placeholder="Search..."
                     value="{{ request.GET.search|default:'' }}">
             </div>
@@ -18,28 +19,36 @@
     <div class="row g-4">
         {% for card in cards %}
         <div class="col-md-4">
-          <div class="card h-100 shadow-sm border-2">
-              <div class="card-body d-flex flex-column">
-                  <h5 class="card-title">{{ card.name }}</h5>
-                  <div class="mt-3 d-flex justify-content-between">
-                      <a href="{% url 'view_details' card.id %}" class="btn btn-primary btn-sm flex-grow-1 me-1">View</a>
-                  </div>
-                    <!-- <div class="mt-3 d-flex justify-content-between">
-                      <a href="#" class="btn btn-warning btn-sm flex-grow-1 me-1">Edit</a>
-                      <a href="#" class="btn btn-danger btn-sm flex-grow-1">Delete</a>
-                  </div> -->
-              </div>
-          </div>
-      </div>
+            <div class="card h-100 shadow-sm border">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title mb-0">{{ card.name }}</h5>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary" type="button"
+                                    id="cardOptions{{ card.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                Options
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOptions{{ card.id }}">
+                                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#editCardModal{{ card.id }}">Edit</a></li>
+                                <li><a class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#deleteCardModal{{ card.id }}">Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-auto">
+                        <a href="{% url 'view_details' card.id %}" class="btn btn-primary btn-sm w-100">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         {% endfor %}
 
         <div class="col-md-4">
             <div class="card h-100 text-center border-primary shadow-sm">
                 <div class="card-body d-flex flex-column justify-content-center align-items-center">
-                    <h5 class="card-title">Add a New Card</h5>
+                    <h5 class="card-title">Add a New Record</h5>
                     <button class="btn btn-outline-primary mt-3 w-75" data-bs-toggle="modal"
                         data-bs-target="#addCardModal">
-                        + Add Card
+                        <i class="bi bi-plus-circle"></i> Add Record
                     </button>
                 </div>
             </div>
@@ -47,29 +56,53 @@
     </div>
 </div>
 
-<div class="modal fade" id="addCardModal" tabindex="-1" aria-labelledby="addCardModalLabel" aria-hidden="true">
+{% include "add_card.html" %}
+
+{% for card in cards %}
+<div class="modal fade" id="editCardModal{{ card.id }}" tabindex="-1" aria-labelledby="editCardModalLabel{{ card.id }}" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
-            <form method="POST" action="{% url 'add_card' %}">
+            <form method="POST" action="{% url 'edit_details' card.id %}">
                 {% csrf_token %}
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addCardModalLabel">Add New Card</h5>
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="editCardModalLabel{{ card.id }}">Edit Record</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="cardName" class="form-label">Card Name</label>
-                        <input type="text" name="name" class="form-control" id="cardName" required>
+                        <label for="cardNameEdit{{ card.id }}" class="form-label">Record Name</label>
+                        <input type="text" name="name" class="form-control" id="cardNameEdit{{ card.id }}" value="{{ card.name }}" required>
                     </div>
-                </div>
-
+                    </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning btn-sm">Save Changes</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="deleteCardModal{{ card.id }}" tabindex="-1" aria-labelledby="deleteCardModalLabel{{ card.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteCardModalLabel{{ card.id }}">Confirm Delete</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the record "{{ card.name }}"?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'delete_details' card.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
 {% endblock %}

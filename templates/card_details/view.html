@@ -3,18 +3,22 @@
 {% block title %}View Card Details{% endblock title %}
 
 {% block body %}
-<div class="container mt-3">
-  <div class="d-flex align-items-center mb-4">
+<h1 class="text-center fw-bold text-success mx-auto d-block">
+  {{ card_details.name }}
+</h1>
+<hr style="width: 80%; margin-left: auto; margin-right: auto;">
+<div class="container mt-1">
+  <div class="d-flex align-items-center mb-2">
     {% if total_amount > 0 %}
     <span class="text-success fw-bold p-2 rounded" style="font-size: 2em;">
-      Total: {{ total_amount }}
+      Balance: {{ total_amount }}
     </span>
     {% elif total_amount < 0 %} <span class="text-danger fw-bold p-2 rounded" style="font-size: 2em;">
-      Total: {{ total_amount}}
+      Balance: {{ total_amount}}
       </span>
       {% else %}
       <span class="text-primary fw-bold p-2 rounded" style="font-size: 2em;">
-        Total: {{ total_amount }}
+        Balance: {{ total_amount }}
       </span>
       {% endif %}
   </div>
@@ -28,8 +32,8 @@
           <label for="entry_type" class="form-label mb-0 me-2 fw-semibold">Type:</label>
           <select name="entry_type" id="entry_type" class="form-select form-select-sm w-100">
             <option value="">All</option>
-            <option value="income" {% if request.GET.entry_type == 'income' %}selected{% endif %}>Income</option>
-            <option value="expense" {% if request.GET.entry_type == 'expense' %}selected{% endif %}>Expense</option>
+            <option value="income" {% if entry_type == 'income' %}selected{% endif %}>Income</option>
+            <option value="expense" {% if entry_type == 'expense' %}selected{% endif %}>Expense</option>
           </select>
         </div>
         <!-- Buttons: Add Income / Expense -->
@@ -125,7 +129,7 @@
         </tr>
         {% empty %}
         <tr>
-          <td colspan="6" class="text-center">No entries found.</td>
+          <td colspan="7" class="text-center">No entries found.</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -135,8 +139,8 @@
     {% include 'card_details/edit.html' %}
     <!-- Delete Modal -->
     {% include 'card_details/delete.html' %}
-
     {% endfor %}
+    
     <!-- Add Income Modal -->
     {% include 'card_details/add_income.html' %}
 

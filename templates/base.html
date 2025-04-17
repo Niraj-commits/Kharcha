@@ -1,24 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <title>{% block title %}{% endblock %}</title>
-</head>
+  </head>
 
-<body>
-    {% for message in messages %}
-    {{message}}
-    {% endfor %}
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="/">Kharcha</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav align-items-center">
+            {% if request.user.is_authenticated %}
+            <li class="nav-item">
+              <a
+                href="{% url 'logout' %}"
+                class="nav-link text-lg font-medium text-gray-700 hover:text-danger transition duration-300"
+                >Logout</a
+              >
+            </li>
+            {% else %}
+            <li class="nav-item me-2">
+              <a
+                href="{% url 'login' %}"
+                class="btn btn-outline-primary"
+              >
+                Login
+              </a>
+            </li>
+            <li class="nav-item">
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#registerModal"
+              >
+                Register
+              </button>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light m-1">
-      <a class="navbar-brand m-1" href="/">Kharcha</a>
+    <div
+      id="toast-container"
+      class="position-fixed top-0 end-0 p-3"
+      style="z-index: 1100;"
+    >
+      {% for message in messages %}
+      <div
+        class="toast align-items-center text-light {% if message.tags == 'error' %}bg-danger{% else %}bg-success{% endif %} border-0 show fade"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex w-100 justify-content-between align-items-center">
+          <div class="toast-body">{{ message }}</div>
+          <button
+            type="button"
+            class="btn-close btn-close-white ms-2"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
 
-  </nav>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const toastElList = document.querySelectorAll('.toast');
+        const toastList = Array.from(toastElList).map(toastEl => new bootstrap.Toast(toastEl));
+
+        toastList.forEach(toast => toast.show());
+        setTimeout(() => {
+          toastList.forEach(toast => toast.hide());
+        }, 1500); // Adjust the delay (in milliseconds) as needed
+      });
+    </script>
+
     {% block body %}{% endblock %}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-</body>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
+  </body>
 </html>
