@@ -13,14 +13,15 @@
     <span class="text-success fw-bold p-2 rounded" style="font-size: 2em;">
       Balance: {{ total_amount }}
     </span>
-    {% elif total_amount < 0 %} <span class="text-danger fw-bold p-2 rounded" style="font-size: 2em;">
-      Balance: {{ total_amount}}
-      </span>
-      {% else %}
-      <span class="text-primary fw-bold p-2 rounded" style="font-size: 2em;">
-        Balance: {{ total_amount }}
-      </span>
-      {% endif %}
+    {% elif total_amount < 0 %}
+    <span class="text-danger fw-bold p-2 rounded" style="font-size: 2em;">
+      Balance: {{ total_amount }}
+    </span>
+    {% else %}
+    <span class="text-primary fw-bold p-2 rounded" style="font-size: 2em;">
+      Balance: {{ total_amount }}
+    </span>
+    {% endif %}
   </div>
 
   <form action="{% url 'view_details' card_details.id %}" method="get" class="row g-1 align-items-end">
@@ -36,23 +37,18 @@
             <option value="expense" {% if entry_type == 'expense' %}selected{% endif %}>Expense</option>
           </select>
         </div>
+
         <!-- Buttons: Add Income / Expense -->
-        <div class="col-md-3 d-flex justify-content-end gap-2">
-          <!-- Add Income Button -->
+        <div class="col-md-3 d-flex justify-content-end gap-2 flex-wrap">
           <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addIncomeModal">
             <i class="bi bi-plus-circle me-1"></i> Add Income
           </button>
-
-          <!-- Add Expense Button -->
           <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
             <i class="bi bi-dash-circle me-1"></i> Add Expense
           </button>
         </div>
-
       </div>
     </div>
-
-
 
     <div class="col-md-2">
       <label for="from_date" class="form-label">From:</label>
@@ -78,15 +74,15 @@
     </div>
   </form>
 
-  <div class="table-responsive mt-4">
-    <table class="table table-striped table-bordered">
+  <div class="table-responsive mt-4 small">
+    <table class="table table-striped table-bordered align-middle">
       <thead class="table-dark">
         <tr>
           <th scope="col">S.N</th>
           <th scope="col">Name</th>
-          <th scope="col">Description</th>
+          <th scope="col" class="d-none d-sm-table-cell">Description</th>
           <th scope="col">Amount</th>
-          <th scope="col">Entry Type</th>
+          <th scope="col" class="d-none d-sm-table-cell">Entry Type</th>
           <th scope="col">Entry Date</th>
           <th scope="col">Actions</th>
         </tr>
@@ -95,14 +91,14 @@
         {% for expense in expense_entries %}
         {% if expense.entry_type == "income" %}
         <tr class="table-success">
-          {% elif expense.entry_type == "expense" %}
+        {% elif expense.entry_type == "expense" %}
         <tr class="table-danger">
-          {% else %}
+        {% else %}
         <tr>
-          {% endif %}
+        {% endif %}
           <th scope="row">{{ forloop.counter }}</th>
           <td>{{ expense.title }}</td>
-          <td>{{ expense.description }}</td>
+          <td class="d-none d-sm-table-cell">{{ expense.description }}</td>
           {% if expense.entry_type == "expense" %}
           <td class="text-danger fw-bold">-Rs.{{ expense.amount }}</td>
           {% elif expense.entry_type == "income" %}
@@ -110,22 +106,18 @@
           {% else %}
           <td>{{ expense.amount }}</td>
           {% endif %}
-          <td class="text">{{ expense.entry_type }}</td>
-          <td>{{ expense.created_at }}</td>
-          <td>
-            <!-- Edit Button -->
+          <td class="d-none d-sm-table-cell text">{{ expense.entry_type }}</td>
+          <td>{{ expense.created_at|date:"Y-m-d" }}</td>
+          <td class="d-flex flex-column flex-sm-row gap-1">
             <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
               data-bs-target="#editModal{{ expense.id }}">
               Edit
             </button>
-
-            <!-- Delete Button -->
-            <button type="button" class="btn btn-sm btn-danger ms-1" data-bs-toggle="modal"
+            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
               data-bs-target="#deleteModal{{ expense.id }}">
               Delete
             </button>
           </td>
-
         </tr>
         {% empty %}
         <tr>
@@ -134,20 +126,14 @@
         {% endfor %}
       </tbody>
     </table>
+
     {% for expense in expense_entries %}
-    <!-- Edit Modal -->
-    {% include 'card_details/edit.html' %}
-    <!-- Delete Modal -->
-    {% include 'card_details/delete.html' %}
+      {% include 'card_details/edit.html' %}
+      {% include 'card_details/delete.html' %}
     {% endfor %}
-    
-    <!-- Add Income Modal -->
+
     {% include 'card_details/add_income.html' %}
-
-    <!-- Add Expense Modal -->
     {% include 'card_details/add_expense.html' %}
-
-
   </div>
 </div>
 {% endblock body %}
