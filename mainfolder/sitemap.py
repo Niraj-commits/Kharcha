@@ -2,11 +2,19 @@ from django.contrib.sitemaps import Sitemap
 from django.urls import reverse
 
 class StaticViewSitemap(Sitemap):
-    priority = 0.8
-    changefreq = 'weekly'
 
     def items(self):
-        return ['home','add_card','login', 'register','logout']  # url names
+        return ['login','home','add_card', 'register','logout']  # url names
 
     def location(self, item):
         return reverse(item)
+
+    def priority(self, item):
+        if item == 'login':
+            return 1.0
+        return 0.8
+
+    def changefreq(self, item):
+        if item == 'login':
+            return 'daily'
+        return 'weekly'
