@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'tracker',
     'core',
     'django_filters',
+    'django.contrib.sitemaps',
 ]
 
 MIDDLEWARE = [
