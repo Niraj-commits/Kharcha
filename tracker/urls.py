@@ -11,5 +11,6 @@ urlpatterns = [
     path('add_card/<pk>/add_expense',Add_Expense,name="add_expense"),
     path('add_card/<pk>/<int:edit_id>',edit_card_details,name="edit_details"),
     path('add_card/<pk>/<int:delete_id>/delete',delete_card_details,name="delete_details"),
-    
+    path('sw.js', service_worker, name='service_worker'),
+
 ]
