@@ -2,36 +2,39 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Added viewport-fit=cover to handle mobile notches -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="google-site-verification" content="bQTRbc4dthNFCE6rULbgwLPW9W4W85vRbuQWhnsJTD4" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
     <title>{% block title %}{% endblock %}</title>
     {% load static %}
 
-<!-- Add inside <head> -->
-<link rel="manifest" href="{% static 'manifest.json' %}">
-<meta name="theme-color" content="#4CAF50">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="apple-touch-icon" href="{% static 'icons/icon-192.png' %}">
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <meta name="theme-color" content="#198754"> <!-- Bootstrap Success Green -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="{% static 'icons/icon-192.png' %}">
 
-
+    <!-- Minimal custom CSS ONLY for PWA features Bootstrap can't do -->
+    <style>
+      body {
+        overscroll-behavior-y: none; /* Prevents pull-to-refresh bounce */
+        -webkit-tap-highlight-color: transparent; /* Removes blue tap highlight */
+        background-color: #f8f9fa; /* Matches Bootstrap bg-light */
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+    </style>
   </head>
-<!-- Add before </body> -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
-        .then(() => console.log('SW registered'))
-        .catch(err => console.error('SW failed:', err));
-    });
-  }
-</script>
+
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <!-- Added sticky-top, py-2, and bg-white for a better mobile app header -->
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top py-2">
       <div class="container">
-        <a class="navbar-brand fw-bold" href="/">Kharcha</a>
+        <!-- Made brand larger and colored -->
+        <a class="navbar-brand fw-bold text-success fs-4" href="/">Kharcha</a>
         <button
-          class="navbar-toggler"
+          class="navbar-toggler border-0 shadow-none"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarNav"
@@ -41,29 +44,33 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul class="navbar-nav align-items-center">
+        
+        <!-- Added mt-3 on mobile to separate menu from header -->
+        <div class="collapse navbar-collapse justify-content-end mt-3 mt-lg-0" id="navbarNav">
+          <!-- Added gap-2 for spacing between buttons -->
+          <ul class="navbar-nav align-items-center gap-2">
             {% if request.user.is_authenticated %}
-            <li class="nav-item">
+            <li class="nav-item w-100 text-center text-lg-start">
               <a
                 href="{% url 'logout' %}"
-                class="nav-link text-lg font-medium text-gray-700 hover:text-danger transition duration-300"
+                class="nav-link text-danger fw-medium py-2"
                 >Logout</a
               >
             </li>
             {% else %}
-            <li class="nav-item me-2">
+            <!-- Added rounded-pill, w-100 on mobile, and better padding -->
+            <li class="nav-item w-100 text-center text-lg-start">
               <a
                 href="{% url 'login' %}"
-                class="btn btn-outline-primary"
+                class="btn btn-outline-success rounded-pill px-4 py-2 w-100"
               >
                 Login
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item w-100 text-center text-lg-start">
               <button
                 type="button"
-                class="btn btn-primary"
+                class="btn btn-success rounded-pill px-4 py-2 w-100 shadow-sm"
                 data-bs-toggle="modal"
                 data-bs-target="#registerModal"
               >
@@ -76,23 +83,25 @@
       </div>
     </nav>
 
+    <!-- Centered toasts for mobile (start-50 translate-middle-x) -->
     <div
       id="toast-container"
-      class="position-fixed top-0 end-0 p-3"
-      style="z-index: 1100;"
+      class="position-fixed top-0 start-50 translate-middle-x p-3 w-100 mt-2"
+      style="z-index: 1100; max-width: 400px;"
     >
       {% for message in messages %}
+      <!-- Added rounded-4 and shadow-lg for app-like notifications -->
       <div
-        class="toast align-items-center text-light {% if message.tags == 'error' %}bg-danger{% else %}bg-success{% endif %} border-0 show fade"
+        class="toast align-items-center text-light {% if message.tags == 'error' %}bg-danger{% else %}bg-success{% endif %} border-0 rounded-4 shadow-lg show fade w-100"
         role="alert"
         aria-live="assertive"
         aria-atomic="true"
       >
-        <div class="d-flex w-100 justify-content-between align-items-center">
-          <div class="toast-body">{{ message }}</div>
+        <div class="d-flex w-100 justify-content-between align-items-center p-1">
+          <div class="toast-body fw-medium fs-6">{{ message }}</div>
           <button
             type="button"
-            class="btn-close btn-close-white ms-2"
+            class="btn-close btn-close-white ms-2 me-2"
             data-bs-dismiss="toast"
             aria-label="Close"
           ></button>
@@ -101,7 +110,20 @@
       {% endfor %}
     </div>
 
+    <!-- Wrapped body in a container with padding for mobile spacing -->
+    <main class="container py-4 mb-5">
+      {% block body %}{% endblock %}
+    </main>
+
     <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(() => console.log('SW registered'))
+            .catch(err => console.error('SW failed:', err));
+        });
+      }
+
       document.addEventListener('DOMContentLoaded', () => {
         const toastElList = document.querySelectorAll('.toast');
         const toastList = Array.from(toastElList).map(toastEl => new bootstrap.Toast(toastEl));
@@ -109,11 +131,9 @@
         toastList.forEach(toast => toast.show());
         setTimeout(() => {
           toastList.forEach(toast => toast.hide());
-        }, 1500); // Adjust the delay (in milliseconds) as needed
+        }, 2500); // Slightly longer for readability
       });
     </script>
-
-    {% block body %}{% endblock %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
   </body>
 </html>

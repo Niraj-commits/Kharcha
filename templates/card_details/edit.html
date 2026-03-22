@@ -1,31 +1,43 @@
 <div class="modal fade" id="editModal{{ expense.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ expense.id }}" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form method="POST" action="{% url 'edit_details' card_details.id expense.id %}">
-          {% csrf_token %}
-          <div class="modal-header">
-            <h5 class="modal-title" id="editModalLabel{{ expense.id }}">Edit Entry</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label class="form-label">Title</label>
-              <input type="text" class="form-control" name="title" value="{{ expense.title }}">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Description</label>
-              <input type="text" class="form-control" name="description" value="{{ expense.description }}">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Amount</label>
-              <input type="number" class="form-control" name="amount" value="{{ expense.amount }}">
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-          </div>
-        </form>
-      </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+            <form method="POST" action="{% url 'edit_details' card_details.id expense.id %}">
+                {% csrf_token %}
+                
+                <!-- Soft primary header for editing -->
+                <div class="modal-header bg-primary bg-opacity-10 border-bottom-0 rounded-top-4 pb-2">
+                    <h5 class="modal-title fw-bold text-primary" id="editModalLabel{{ expense.id }}">
+                        <i class="bi bi-pencil-square me-2"></i>Edit Entry
+                    </h5>
+                    <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body px-4 pt-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-medium text-secondary">Title</label>
+                        <input type="text" class="form-control form-control-lg rounded-3 fs-6 shadow-none" name="title" value="{{ expense.title }}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-medium text-secondary">Description</label>
+                        <input type="text" class="form-control form-control-lg rounded-3 fs-6 shadow-none" name="description" value="{{ expense.description }}">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-medium text-secondary">Amount</label>
+                        <!-- Added a nice input group for currency -->
+                        <div class="input-group shadow-sm">
+                            <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted fw-medium">Rs.</span>
+                            <input type="number" class="form-control form-control-lg rounded-end-3 border-start-0 fs-6 shadow-none" name="amount" value="{{ expense.amount }}">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer border-top-0 pt-0 px-4 pb-4">
+                    <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-medium shadow-sm">Save Changes</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
+</div>
