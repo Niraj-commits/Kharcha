@@ -9,6 +9,7 @@
     
     <title>{% block title %}{% endblock %}</title>
         <!-- 1. Link to your manifest -->
+    {% load static %}
     <link rel="manifest" href="{% static 'manifest.json' %}">
 
     <!-- 2. Force Standalone mode on iOS/Safari -->
